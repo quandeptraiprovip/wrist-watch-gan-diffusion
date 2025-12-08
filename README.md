@@ -50,6 +50,49 @@ StyleGAN2
 
 Chọn StyleGAN2 để training vì nó giải quyết được rất nhiều vấn đề cốt lõi mà các GAN trước đó gặp phải, đồng thời cho ra ảnh chất lượng cao, ổn định và kiểm soát tốt hơn.
 
+Evaluation metrics
+
+FID: So sánh phân phối đặc trưng (feature distribution) của ảnh thật và ảnh được generate.
+
+Ưu điểm
+
+✅ Phổ biến
+
+✅ Tương quan tốt với cảm nhận con người
+
+✅ So sánh được GAN và Diffusion
+
+Nhược điểm
+
+❌ Phụ thuộc Inception model
+
+❌ Cần nhiều ảnh (thường >5k)
+
+IS: Ảnh tốt là classifier tự tin cao (p(y|x) rõ ràng) và đa dạng (p(y) đa dạng). 
+
+Nhược điểm:
+
+❌ Không so với ảnh thật
+
+❌ Có thể cao dù ảnh không thực tế
+
+❌ Dễ bị “lừa”
+
+Precision/Recall cho GAN: Precision cho biết ảnh có giống thật không. Recall cho biết ảnh có đa dạng không (bao phủ hết data thật không).
+
+|Trường hợp|Nhận xét|
+|:---|:---|
+|Precision cao, Recall thấp	|Mode collapse|
+|Precision thấp, Recall cao	|Nhiễu, ảnh xấu|
+
+LPIPS: Đo sự khác nhau về cảm nhận thị giác của con người. So ảnh gốc và ảnh generated / reconstructed. Dùng mạng deep features
+SSIM/PSNR (không dùng cho GAN thuần): Dùng khi: Có ground-truth. Dành cho super-resolution, denoising.
+
+❌ Không phù hợp khi ảnh chỉ “giống về style” nhưng khác nội dung
+
+NLL/ELBO (chỉ dùng cho Diffusion): GAN không có likelihood rõ ràng → không dùng được
+Human Evaluation: Con người đánh giá: Đẹp / không đẹp. Thật / không thật. Phù hợp / không. Nhưng lâu, không được tự động.
+
 #The comparision
 
 |Tiêu chí|GAN|Diffusion|
