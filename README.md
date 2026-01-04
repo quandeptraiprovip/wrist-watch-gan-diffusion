@@ -122,3 +122,7 @@ Cách hoạt động:
 3. Sampling: Bắt đầu từ noise thuần và khử dần thành ảnh. Sinh ảnh nhiều bước.
 
 Diffusion mạnh hơn về lý thuyết.
+
+#Kết quả từ GANStyle2
+
+<img src="img/grid.png">
