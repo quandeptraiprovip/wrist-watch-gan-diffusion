@@ -8,17 +8,17 @@ Model
 
 Vấn đề khó khăn khi train mô hình GAN và nhưng hướng giải quyết
 
-Non-convergence: Một trong hai model (hoặc cả 2) không hội tụ. Khi đó thì chắc chắn quá trình train GAN là thất bại. Khi đó, có thể do các lý do sau: 
-Dữ liệu không chuẩn, unbalance.
-Model quá tệ, quá cơ bản, quá phức tạp, không phù hợp
-Dữ liệu quá thiếu, bị nhiễu
-Overfit, underfit
+- Non-convergence: Một trong hai model (hoặc cả 2) không hội tụ. Khi đó thì chắc chắn quá trình train GAN là thất bại. Khi đó, có thể do các lý do sau: 
+    - Dữ liệu không chuẩn, unbalance.
+    - Model quá tệ, quá cơ bản, quá phức tạp, không phù hợp
+    - Dữ liệu quá thiếu, bị nhiễu
+    - Overfit, underfit
 
-Mode collapse: Có một hiện tượng rất phổ biến: fake_images sinh ra giống hệt nhau, ít phụ thuộc vào input đầu vào. Điều này xảy ra khi mà generator tìm ra một điểm dữ liệu đặc biệt mà tại điểm đó discriminator không thể phân biệt được.
+- Mode collapse: Có một hiện tượng rất phổ biến: fake_images sinh ra giống hệt nhau, ít phụ thuộc vào input đầu vào. Điều này xảy ra khi mà generator tìm ra một điểm dữ liệu đặc biệt mà tại điểm đó discriminator không thể phân biệt được.
 
-Dimished gradient: Hiện tượng này xảy ra khi discriminator hội tụ quá nhanh (hiện tượng này xảy ra cực kì phổ biến do tại những step đầu tiên, ảnh thật và ảnh fake khác nhau rất nhiều). Ngay những epoch đầu tiên nó đã nhận biết được thật giả. Điều này gây ra hiện tượng gradient vanishes cho generator khiến cho generator học rất chậm, hoặc chẳng học được gì nên quá trình train thất bại.
+- Dimished gradient: Hiện tượng này xảy ra khi discriminator hội tụ quá nhanh (hiện tượng này xảy ra cực kì phổ biến do tại những step đầu tiên, ảnh thật và ảnh fake khác nhau rất nhiều). Ngay những epoch đầu tiên nó đã nhận biết được thật giả. Điều này gây ra hiện tượng gradient vanishes cho generator khiến cho generator học rất chậm, hoặc chẳng học được gì nên quá trình train thất bại.
 
-Nhạy cảm với hyper parameters: Do GAN là kết hợp giữa hai model nên việc train song song 2 model này rất khó và nhạy cảm bởi các tham số như learning, các hyper parameter trong optimizer ...
+- Nhạy cảm với hyper parameters: Do GAN là kết hợp giữa hai model nên việc train song song 2 model này rất khó và nhạy cảm bởi các tham số như learning, các hyper parameter trong optimizer ...
 
 Phương pháp cải thiện:
 Chiến lược train: Khi train, nên trên theo minibatch trong từng step. Trong 1 batch, không nên chứa lẫn lộn real_image, fake_image mà lần lượt real_image trước, fake_image sau.
