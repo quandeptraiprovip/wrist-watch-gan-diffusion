@@ -20,22 +20,25 @@ Vấn đề khó khăn khi train mô hình GAN và nhưng hướng giải quyế
 
 - Nhạy cảm với hyper parameters: Do GAN là kết hợp giữa hai model nên việc train song song 2 model này rất khó và nhạy cảm bởi các tham số như learning, các hyper parameter trong optimizer ...
 
-Phương pháp cải thiện:
-Chiến lược train: Khi train, nên trên theo minibatch trong từng step. Trong 1 batch, không nên chứa lẫn lộn real_image, fake_image mà lần lượt real_image trước, fake_image sau.
-Chọn model: Đôi khi do model của bạn quá đơn giản, quá phức tạp nên khả năng của model không được cải thiện. Thường người ta xây dựng DCGAN - tức generator và discriminator là 2 Deep Convolution có kiến trúc điển hình. Nếu train mà mãi không thành công, có thể nghĩ tới việc thêm, bớt các layer, các nhánh. Ví dụ với bộ mnist đơn giản, chỉ cần 3, 4 layer Conv trong khi với bộ Face thì cần nhiều layer hơn, cần kết hợp các loại batchnorm, dropout, các skip connection ...
-Qua thực nghiệm người ta thấy rằng:
-Không nên dùng dropout trong generator, ngược lại với discriminator.
-Nên dùng ConvTranspose thay vì kết hợp kiểu: Upsampling+Conv, Interpolation+Conv ...
-Nên dùng hàm tanh thay cho sigmoid cho output của generator.
-Nên dùng hàm Leaky Relu thay cho Relu tại các lớp Conv.
+**Phương pháp cải thiện:**
 
-Chọn hyper parameter, optimizer: Qua thực nghiệm, người ta nhận ra trong các thuật toán optimizer, Adam thường cho kết quả tốt nhất. Ta nên chọn learning_rate có giá trị nhỏ hơn bình thường, nên chọn learning_rate bé hơn 0.0002. Với Adam, nên đổi tham số beta_1 bé hơn 0.5 thay vì để mặc đinh (0.9).
+- Chiến lược train: Khi train, nên trên theo minibatch trong từng step. Trong 1 batch, không nên chứa lẫn lộn real_image, fake_image mà lần lượt real_image trước, fake_image sau.
+- Chọn model: Đôi khi do model của bạn quá đơn giản, quá phức tạp nên khả năng của model không được cải thiện. Thường người ta xây dựng DCGAN - tức generator và discriminator là 2 Deep Convolution có kiến trúc điển hình. Nếu train mà mãi không thành công, có thể nghĩ tới việc thêm, bớt các layer, các nhánh. Ví dụ với bộ mnist đơn giản, chỉ cần 3, 4 layer Conv trong khi với bộ Face thì cần nhiều layer hơn, cần kết hợp các loại batchnorm, dropout, các skip connection ...
+**Qua thực nghiệm người ta thấy rằng:**
+  
+- Không nên dùng dropout trong generator, ngược lại với discriminator.
+- Nên dùng ConvTranspose thay vì kết hợp kiểu: Upsampling+Conv, Interpolation+Conv ...
+- Nên dùng hàm tanh thay cho sigmoid cho output của generator.
+- Nên dùng hàm Leaky Relu thay cho Relu tại các lớp Conv.
+
+**Chọn hyper parameter, optimizer:** Qua thực nghiệm, người ta nhận ra trong các thuật toán optimizer, Adam thường cho kết quả tốt nhất. Ta nên chọn learning_rate có giá trị nhỏ hơn bình thường, nên chọn learning_rate bé hơn 0.0002. Với Adam, nên đổi tham số beta_1 bé hơn 0.5 thay vì để mặc đinh (0.9).
+
 Mẹo để chọn learning_rate là dựa vào accuracy của discriminator và generator.
-B1: Chọn learning_rate (nên bé hơn 0.0002)
-B2: Quan sát accuracy của cả discriminator và generator, nếu 1 trong 2 accuracy này tăng quá nhanh thì model học quá nhanh gây Diminished gradient. Cần giảm learning_rate xuống
-B3: Lặp đi lặp lại bước 2 cho tới khi thấy accuracy của 2 model thay đổi từ từ và đều nhau.
+- B1: Chọn learning_rate (nên bé hơn 0.0002)
+- B2: Quan sát accuracy của cả discriminator và generator, nếu 1 trong 2 accuracy này tăng quá nhanh thì model học quá nhanh gây Diminished gradient. Cần giảm learning_rate xuống
+- B3: Lặp đi lặp lại bước 2 cho tới khi thấy accuracy của 2 model thay đổi từ từ và đều nhau.
 
-Thêm nhiễu vào dữ liệu.
+**Thêm nhiễu vào dữ liệu.**
 
 Giả sử ta có binary label cho 4 ảnh như sau: label = [[0,1],[0,1],[1,0],[1,0]]. Để tránh việc discriminator học quá nhanh, ta có thể thêm nhiễu vào dữ liệu theo 2 cách:
 Cách 1: Đảo lại giá trị label
@@ -46,11 +49,11 @@ Thay vì dùng 2 giá trị chính xác là 0 và 1, ta nên thay đổi thành 
 
 PatchGAN là 1 ý tưởng cải tiến mạng discriminator của GAN tại phần output. Thay vì thiết kế mạng có output là 1 giá trị 0/1 hoặc [0,1]/[1,0], output là 1 matrix 14 * 14. Tương tự, label cho từng ảnh cũng là 1 matrix 14 * 14 có giá trị các phần tử giống hệt nhau. Việc thay đổi output mang ý nghĩa chia ảnh thành 14 * 14 phần bằng nhau (và overlap nhau). Như vậy mỗi giá trị trong output matrix 14 * 14 đaị diện cho 1 vùng local. Việc làm này giúp cho GAN dễ dàng tối ưu tới từng chi tiết.
 
-StyleGAN2
+## StyleGAN2
 
 Chọn StyleGAN2 để training vì nó giải quyết được rất nhiều vấn đề cốt lõi mà các GAN trước đó gặp phải, đồng thời cho ra ảnh chất lượng cao, ổn định và kiểm soát tốt hơn.
 
-Evaluation metrics
+## Evaluation metrics
 
 FID: So sánh phân phối đặc trưng (feature distribution) của ảnh thật và ảnh được generate.
 
@@ -102,7 +105,7 @@ Human Evaluation: Con người đánh giá: Đẹp / không đẹp. Thật / kh�
 
 Về mặt lý thuyết, thì Diffusion ổn định hơn. Gan mang tính đối kháng hơn.
     
-#GAN
+# GAN
 Cách hoạt động:
 1. Lấy noise z (vector ngẫu nhiên)
 2. Generator -> tạo ảnh giả
@@ -115,7 +118,7 @@ z∼N(0,1)
 Các vấn đề:
 Mode collapse: Mode collapse là hiện tượng G chỉ sinh ra một số ít kiểu ảnh giống nhau, mặc dù dữ liệu gốc có nhiều dạng khác nhau.
 
-#Diffusion
+# Diffusion
 Cách hoạt động:
 1. Foward process: Thêm nhiễu Gaussian dần dần vào ảnh
 2. Reserve process: Học cách loại bỏ nhiễu
@@ -123,6 +126,6 @@ Cách hoạt động:
 
 Diffusion mạnh hơn về lý thuyết.
 
-#Kết quả từ GANStyle2
+## Kết quả từ GANStyle2
 
 <img src="img/grid.png">
